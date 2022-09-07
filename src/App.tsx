@@ -1,9 +1,9 @@
 import React from "react";
 import "./App.css";
-import Views from "./views";
+import Pages from "./pages";
 
 function App() {
-  return <Views />;
+  return <Pages />;
 }
 
 export default App;
