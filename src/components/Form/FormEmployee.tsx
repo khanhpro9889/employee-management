@@ -71,6 +71,7 @@ export default function FormEmployee({
         rules={[
           { required: true, message: "Hãy nhập email!" },
           {
+            // eslint-disable-next-line
             pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
             message: "Hãy nhập đúng định dạng",
           },

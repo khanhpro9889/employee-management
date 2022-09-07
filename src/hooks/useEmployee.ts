@@ -37,7 +37,6 @@ export default function useEmployee() {
   const getSingleEmployee = async (id: string) => {
     try {
       const employee = await customFetch(`${url}/${id}`, "GET");
-      message.success("Thành công!");
       return employee;
     } catch (error) {
       message.error("Có lỗi xảy ra!");
