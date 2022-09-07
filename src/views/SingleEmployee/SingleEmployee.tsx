@@ -1,4 +1,4 @@
-import { Button, message, Row, Space } from "antd";
+import { Button, Row, Space } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useEmployee from "../../hooks/useEmployee";
@@ -11,34 +11,31 @@ export default function SingleEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getSingleEmployee } = useEmployee();
-  const [employee, setEmployee] = useState<employeeType | null>(null);
+  const [employee, setEmployee] = useState<employeeType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { editEmployee } = useEmployee();
 
   const fetchSingleEmployee = async (id: string) => {
     const em = await getSingleEmployee(id);
-    setEmployee(em);
+    if (em) setEmployee(em);
   };
 
   useEffect(() => {
     if (id) {
       fetchSingleEmployee(id);
     }
+    // eslint-disable-next-line
   }, [id]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
-  const onSubmit = (values: employeeType) => {
-    if (id)
-      try {
-        editEmployee(values);
-        fetchSingleEmployee(id);
-        message.success("Sửa thành công!");
-      } catch (error) {
-        message.success("Có lỗi xảy ra");
-      }
+  const onSubmit = async (values: employeeType) => {
+    if (id) {
+      const res = await editEmployee(values);
+      if (res) fetchSingleEmployee(id);
+    }
     return setIsModalOpen(false);
   };
 

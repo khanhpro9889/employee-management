@@ -4,7 +4,7 @@ import { employeeType } from "../../types";
 import FormEmployee from "../Form/FormEmployee";
 
 type propsType = {
-  employee: employeeType | null;
+  employee: employeeType | undefined;
   isModalOpen: boolean;
   handleCancel: () => void;
   onSubmit: (values: employeeType) => void;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Popconfirm, Row, Space, Table } from "antd";
+import { Button, Popconfirm, Row, Space, Table } from "antd";
 import { employeeType } from "../../types";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import Column from "antd/lib/table/Column";
@@ -11,9 +11,7 @@ import ModalEmployee from "../../components/ModalEmployee/ModalEmployee";
 export default function Home() {
   const [employeeList, setEmployeeList] = useState<employeeType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<employeeType | null>(
-    null
-  );
+  const [selectedEmployee, setSelectedEmployee] = useState<employeeType>();
   const [isLoading, setIsLoading] = useState(false);
 
   const { getAllEmployees, deleteEmployee, editEmployee, addEmployee } =
@@ -31,40 +29,24 @@ export default function Home() {
     // eslint-disable-next-line
   }, []);
 
-  const confirmDelete = (id: string) => {
-    try {
-      deleteEmployee(id);
-      fetchAllEmployees();
-      message.success("Xóa thành công!");
-    } catch (error) {
-      message.error("Có lỗi xảy ra");
-    }
+  const confirmDelete = async (id: string) => {
+    const res = await deleteEmployee(id);
+    if (res) fetchAllEmployees();
   };
 
   const handleAdd = () => {
     setIsModalOpen(true);
   };
 
-  const onSubmit = (values: employeeType) => {
+  const onSubmit = async (values: employeeType) => {
     if (selectedEmployee) {
-      try {
-        editEmployee(values);
-        fetchAllEmployees();
-        message.success("Sửa thành công!");
-      } catch (error) {
-        message.success("Có lỗi xảy ra");
-      }
-      return setIsModalOpen(false);
+      setIsModalOpen(false);
+      let res = await editEmployee(values);
+      if (res) return fetchAllEmployees();
     }
-    try {
-      addEmployee(values);
-      fetchAllEmployees();
-      message.success("Thêm thành công!");
-    } catch (error) {
-      message.success("Có lỗi xảy ra");
-    }
-
     setIsModalOpen(false);
+    let res = await addEmployee(values);
+    if (res) fetchAllEmployees();
   };
 
   const handleCancel = () => {
@@ -89,7 +71,7 @@ export default function Home() {
       </Row>
       <Table
         dataSource={employeeList}
-        scroll={{ y: 240, x: 800 }}
+        scroll={{ y: 500, x: 900 }}
         rowKey={(record) => record.id}
         loading={isLoading}
       >
@@ -136,7 +118,7 @@ export default function Home() {
         employee={selectedEmployee}
         handleCancel={handleCancel}
         isModalOpen={isModalOpen}
-        setNullSelectedEmployee={() => setSelectedEmployee(null)}
+        setNullSelectedEmployee={() => setSelectedEmployee(undefined)}
         onSubmit={onSubmit}
       />
     </div>

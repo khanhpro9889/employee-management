@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { employeeType } from "../../types";
 
 type propsType = {
-  employee: employeeType | null;
+  employee: employeeType | undefined;
   setNullSelectedEmployee?: () => void;
   onSubmit: (values: employeeType) => void;
   handleCancel: () => void;
